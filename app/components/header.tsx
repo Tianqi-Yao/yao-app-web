@@ -2,7 +2,7 @@ export default function Header() {
     return (
         <header className="bg-black">
             <p className="text-white text-center">
-                Tianqi's Web
+                Website of Tianqi
             </p>
         </header>
     )
