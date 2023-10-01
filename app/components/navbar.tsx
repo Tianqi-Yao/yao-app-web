@@ -5,6 +5,7 @@ export default function Navbar() {
         <nav className='flex gap-2 p-2'>
             <Link href="/">Home</Link>
             <Link href="/searchjobs">SearchJobs</Link>
+            <Link href="/fetchwebtool">FetchWebTool</Link>
         </nav>
     )
 }
