@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     return NextResponse.json(
-      { message: "fetch screenshot error", error },
+      { message: "fetch screenshot error", error},
       { status: 500 }
     );
   }

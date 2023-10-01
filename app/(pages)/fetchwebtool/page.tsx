@@ -8,8 +8,17 @@ export default function FetchWebTool() {
   const [mainElement, setMainElement] = useState<string>("h3.gs_rt[ontouchstart='gs_evt_dsp(event)']");
   const [imgURL, setImgURL] = useState<string>("");
   const [messages, setMessages] = useState<any>({});
+  const [isloading, setIsLoading] = useState<boolean>(false);
+  const [warnning, setWarnning] = useState<string>("");
 
   const handleFetchClick = async () => {
+    if (!websiteURL) {
+      setWarnning("Please input website URL");
+      return;
+    }else{
+      setWarnning("");
+    }
+    setIsLoading(true);
     logger.debug("show variables", { websiteURL, mainElement });
     // 根据网站URL和主要元素，获取网站截图和主要元素的文本
     const data = await fetchWebScreenshotAndInfo(
@@ -17,19 +26,21 @@ export default function FetchWebTool() {
       mainElement
     );
     logger.debug("show fetched data",data);
+    if (data.error) {
+      setWarnning("input error");
+      setIsLoading(false);
+      return;
+    }
     setImgURL(data.data.screenshotPath);
     setMessages(data.data.elementInfo);
+    setIsLoading(false);
   };
 
   return (
     <main className="p-2 min-h-screen flex flex-col">
       <h1>Fetch Web Tool</h1>
-      <img
-        src={imgURL ? imgURL : "/screenshots/fetchwebtool.png"}
-        alt="Fetch Web Tool"
-        className="w-1/2"
-      />
-      <label htmlFor="url-input" className="flex flex-col gap-2">
+      {warnning && <div className="text-red-500">{warnning}</div>}
+      <label htmlFor="url-input" className="flex flex-col py-2">
         Website URL
       </label>
       <input
@@ -41,7 +52,7 @@ export default function FetchWebTool() {
           setWebsiteURL(e.target.value);
         }}
       />
-      <label htmlFor="main-element-input" className="flex flex-col gap-2">
+      <label htmlFor="main-element-input" className="flex flex-col py-2">
         Main Element
       </label>
       <input
@@ -53,11 +64,11 @@ export default function FetchWebTool() {
           setMainElement(e.target.value);
         }}
       />
-      <button className="border p-2" onClick={handleFetchClick}>
-        Fetch
+      <button className="border py-2 my-4 w-20 bg-green-300 hover:bg-green-600 focus:ring-1" onClick={handleFetchClick} disabled={isloading}>
+        {isloading ? "Loading..." : "Fetch"}
       </button>
       {messages && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col py-2">
           {Object.keys(messages).map((key) => {
             return (
               <div key={key}>
@@ -68,6 +79,11 @@ export default function FetchWebTool() {
           })}
         </div>
       )}
+      <img
+        src={imgURL ? imgURL : "/screenshots/fetchwebtool.png"}
+        alt="Fetch Web Tool"
+        className="w-4/5"
+      />
     </main>
   );
 }
