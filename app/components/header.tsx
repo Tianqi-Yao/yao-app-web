@@ -1,9 +1,9 @@
 export default function Header() {
     return (
         <header className="bg-black">
-            <div className="text-white text-center">
-                Tianqi's Web
-            </div>
+            <p className="text-white text-center">
+                Website of Tianqi
+            </p>
         </header>
     )
 }
