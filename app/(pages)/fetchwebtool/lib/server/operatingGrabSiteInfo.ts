@@ -29,6 +29,7 @@ async function operatingGrabSiteInfo(websiteURL: string, mainElement: string) {
     return { screenshotPath, elementInfo };
   } catch (error: unknown) {
     logger.warn(`warning: fetch "${websiteURL}" screenshot failed`);
+    logger.error("error: ", error)
     if (typeof browser !== "undefined") {
       await browser.close();
     }    
