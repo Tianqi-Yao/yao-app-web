@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "next": "latest",
-    "playwright": "^1.38.1",
+    "playwright-aws-lambda": "^0.10.0",
+    "playwright-core": "^1.38.1",
     "react": "latest",
     "react-dom": "latest",
     "sharp": "^0.32.6"

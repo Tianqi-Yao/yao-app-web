@@ -1,8 +1,10 @@
-import { Browser, webkit, Page } from "playwright";
+// import { Browser, chromium, Page } from "playwright";
+import * as playwright from "playwright-aws-lambda";
 import * as fs from "fs";
 import * as path from "path";
 import sharp from "sharp";
 import {logger} from "@/app/lib/utils/logger";
+import { Browser, Page } from "playwright-core";
 
 
 async function operatingGrabSiteInfo(websiteURL: string, mainElement: string) {
@@ -10,7 +12,7 @@ async function operatingGrabSiteInfo(websiteURL: string, mainElement: string) {
   try {
     // browser = await chromium.launch();
     // 换成Webkit，因为chromium在服务器上会报错
-    browser = await webkit.launch();
+    const browser = await playwright.launchChromium({ headless: true })
     const context = await browser.newContext({
       userAgent:
         "AppleWebKit/537.36 (KHTML, like Gecko)",
