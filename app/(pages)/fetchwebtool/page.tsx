@@ -5,35 +5,39 @@ import { fetchWebScreenshotAndInfo } from "./lib/client/fetchWebScreenshotAndInf
 
 export default function FetchWebTool() {
   const [websiteURL, setWebsiteURL] = useState<string>("");
-  const [mainElement, setMainElement] = useState<string>("h3.gs_rt[ontouchstart='gs_evt_dsp(event)']");
+  const [mainElement, setMainElement] = useState<string>(
+    "h3.gs_rt[ontouchstart='gs_evt_dsp(event)']"
+  );
   const [imgURL, setImgURL] = useState<string>("");
   const [messages, setMessages] = useState<any>({});
   const [isloading, setIsLoading] = useState<boolean>(false);
   const [warnning, setWarnning] = useState<string>("");
+  const [imgVersion, setImgVersion] = useState<number>(0);
 
   const handleFetchClick = async () => {
-    if (!websiteURL) {
-      setWarnning("Please input website URL");
-      return;
-    }else{
-      setWarnning("");
-    }
-    setIsLoading(true);
-    logger.debug("show variables", { websiteURL, mainElement });
-    // 根据网站URL和主要元素，获取网站截图和主要元素的文本
-    const data = await fetchWebScreenshotAndInfo(
-      websiteURL,
-      mainElement
-    );
-    logger.debug("show fetched data",data);
-    if (data.error) {
-      setWarnning("input error");
+    try {
+      if (!websiteURL) {
+        setWarnning("Please input website URL");
+        return;
+      } else {
+        setWarnning("");
+      }
+      setIsLoading(true);
+      logger.debug("show variables", { websiteURL, mainElement });
+      // 根据网站URL和主要元素，获取网站截图和主要元素的文本
+      const { screenshotPath, elementInfo } = await fetchWebScreenshotAndInfo(
+        websiteURL,
+        mainElement
+      );
+      logger.debug("show fetched data", screenshotPath, elementInfo);
+      setImgURL(screenshotPath);
+      setImgVersion(curr => curr + 1);
+      setMessages(elementInfo);
       setIsLoading(false);
-      return;
+    } catch (e: any) {
+      setWarnning(e.message);
+      setIsLoading(false);
     }
-    setImgURL(data.data.screenshotPath);
-    setMessages(data.data.elementInfo);
-    setIsLoading(false);
   };
 
   return (
@@ -64,7 +68,11 @@ export default function FetchWebTool() {
           setMainElement(e.target.value);
         }}
       />
-      <button className="border py-2 my-4 w-20 bg-green-300 hover:bg-green-600 focus:ring-1" onClick={handleFetchClick} disabled={isloading}>
+      <button
+        className="border py-2 my-4 w-20 bg-green-300 hover:bg-green-600 focus:ring-1"
+        onClick={handleFetchClick}
+        disabled={isloading}
+      >
         {isloading ? "Loading..." : "Fetch"}
       </button>
       {messages && (
@@ -80,7 +88,7 @@ export default function FetchWebTool() {
         </div>
       )}
       <img
-        src={imgURL ? imgURL : "/screenshots/fetchwebtool.png"}
+        src={imgURL ?`${imgURL}?v=${imgVersion}` : "/screenshots/fetchwebtool.png"}
         alt="Fetch Web Tool"
         className="w-4/5"
       />

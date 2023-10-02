@@ -53,6 +53,10 @@ async function takeMainElementInfo(page: Page, mainElement: string) {
   const elementInfo = await Promise.all(
     elements.map((element) => element.innerText())
   );
+  // 截图元素
+  await Promise.all(
+    elements.map((element,i) => element.screenshot({ path: `./public/screenshots/subScreenshot/element${i}.png` }))
+  );
   logger.debug("all text", elementInfo);
   return elementInfo;
 }
