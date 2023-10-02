@@ -11,9 +11,15 @@ async function fetchWebScreenshotAndInfo(websiteURL: string, mainElement: string
       mainElement,
     }),
   });
+  logger.debug("show res", res);
+  if (!res.ok) {
+    logger.error("fetchWebScreenshotAndInfo res not ok", res);
+    throw new Error(`API call error: fetchWebScreenshotAndInfo res not ok.`);
+  }
   const data = await res.json();
   logger.debug("show res.json() data", data);
-  return data;
+  const {screenshotPath, elementInfo} = data.data;
+  return {screenshotPath, elementInfo};
 }
 
 export {
